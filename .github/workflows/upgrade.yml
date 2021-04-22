@@ -7,20 +7,14 @@ jobs:
   job_1:
     runs-on: ubuntu-latest
     steps:
-    - run: docker run -d nginx:alpine
-    - run: docker ps
+    - run: echo "::set-output name=job_1::pling"
+    - run: echo ${{ github }}
     - run: sleep 5
-    - run: docker ps
-    - run: sleep 5
-    - run: docker ps
         
   job_2:
     runs-on: ubuntu-latest
     steps:
-    - run: docker run -d nginx:alpine
-    - run: docker ps
+    - run: echo echo "::set-output name=job_2::plong"
+    - run: echo ${{ github }}
     - run: sleep 5
-    - run: docker ps
-    - run: sleep 5
-    - run: docker ps
 
