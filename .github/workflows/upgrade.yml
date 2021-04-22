@@ -1,0 +1,26 @@
+name: Upgrade
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job_1:
+    runs-on: ubuntu-latest
+    steps:
+    - run: docker run -d nginx:alpine
+    - run: docker ps
+    - run: sleep 5
+    - run: docker ps
+    - run: sleep 5
+    - run: docker ps
+        
+  job_2:
+    runs-on: ubuntu-latest
+    steps:
+    - run: docker run -d nginx:alpine
+    - run: docker ps
+    - run: sleep 5
+    - run: docker ps
+    - run: sleep 5
+    - run: docker ps
+
