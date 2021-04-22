@@ -8,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: echo "::set-output name=job_1::pling"
-    - run: echo ${{ github.action_path }}
+    - run: echo "x${{ github.action_path }}y"
     - run: sleep 5
         
   job_2:
     runs-on: ubuntu-latest
     steps:
     - run: echo echo "::set-output name=job_2::plong"
-    - run: echo ${{ github.action_path }}
+    - run: echo "x${{ github.action_path }}y"
     - run: sleep 5
 
