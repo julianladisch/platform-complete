@@ -1,0 +1,46 @@
+name: log4shell
+on:
+  workflow_dispatch:
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - module: mod-users:18.0.1
+            port: 8081
+          - module: mod-inventory:17.0.7
+            port: 9403
+    steps:
+      - run: |
+          cat > docker-compose.yml << EOF
+          version: "3"
+          services:
+            nginx:
+              container_name: nginx
+              image: nginx:alpine
+              ports: [80:80]
+            module:
+              container_name: module
+              image: folioorg/${{ matrix.module }}
+              ports: [8000:${{ matrix.port }}]
+            module-with-env:
+              container_name: module-with-env
+              image: folioorg/${{ matrix.module }}
+              ports: [8001:${{ matrix.port }}]
+              environment:
+                - LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+          networks:
+            default:
+              name: folio_network
+          EOF
+      - run: docker-compose up -d
+      - run: curl -sS --retry 30 --retry-connrefused localhost:8000
+      - run: curl -sS --retry 30 --retry-connrefused localhost:8001
+      - run: curl -sS localhost?module
+      - run: curl -w"\n" -sS -H 'X-Okapi-Tenant:${jndi:ldap://nginx:80}' localhost:8000
+      - run: curl -sS localhost?module-env
+      - run: curl -w"\n" -sS -H 'X-Okapi-Tenant:${jndi:ldap://nginx:80}' localhost:8001
+      - run: curl -sS localhost?finished
+      - run: docker logs nginx
+
